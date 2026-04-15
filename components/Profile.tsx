@@ -22,7 +22,7 @@ export default function ProfileScreen() {
       className="flex-1 bg-zinc-50"
       contentContainerStyle={{ paddingBottom: 24 }}
     >
-      <View className="p-6">
+      <View className="p-6 pt-10">
         <View className="mb-8 flex-row items-start justify-between">
           <View className="flex-row items-center gap-4">
             <View className="h-20 w-20 items-center justify-center rounded-full bg-violet-500 shadow">
