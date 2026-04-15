@@ -6,6 +6,7 @@ type Props = {
   height?: number;
   rounded?: boolean;
   shadow?: boolean;
+  color?: string;
 };
 
 export default function ImageViewer({
@@ -14,15 +15,16 @@ export default function ImageViewer({
   height = 192,
   rounded = false,
   shadow = false,
+  color,
 }: Props) {
   return (
     <Image
-      className={shadow ? "shadow-lg" : ""}
+      className={shadow ? `shadow-lg ${color ? `bg-${color}` : ""}` : ""}
       source={imgSource}
       style={{
         width,
         height,
-
+        backgroundColor: color,
         borderRadius: rounded ? 16 : 0,
       }}
     />
