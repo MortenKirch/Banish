@@ -2,8 +2,7 @@
 
 # dependencies
 node_modules/
-#database data
-db-data/
+
 # Expo
 .expo/
 dist/
@@ -32,7 +31,6 @@ yarn-error.*
 *.pem
 
 # local env files
-.env
 .env*.local
 
 # typescript
