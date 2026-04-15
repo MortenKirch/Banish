@@ -1,8 +1,9 @@
-import { Text, View } from "react-native";
+import { ThemedText } from "@/components/themed-text";
+import { View } from "react-native";
 export default function CollectionScreen() {
   return (
     <View>
-      <Text>Collection</Text>
+      <ThemedText>Collection</ThemedText>
     </View>
   );
 }

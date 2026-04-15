@@ -1,15 +1,16 @@
-import { Link } from "expo-router";
+import { Link } from "@/.expo/types/router";
+import { ThemedText } from "@/components/themed-text";
 import { View } from "react-native";
 
-export default function LoginScreen() {
+export default function Login() {
   return (
     <View>
-      <Link href="/signup" className="text-white">
-        Sign up
-      </Link>
-      <Link href="/" className="text-white">
-        Login
-      </Link>
+      <ThemedText type="link">
+        <Link href="/signup">Sign up</Link>
+      </ThemedText>
+      <ThemedText type="link">
+        <Link href="/">Login</Link>
+      </ThemedText>
     </View>
   );
 }
