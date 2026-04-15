@@ -27,11 +27,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="search"
         options={{
-          title: "Explore",
+          title: "Search",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="magnifyingglass" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="collection"
+        options={{
+          title: "Collection",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="rectangle.stack.fill" color={color} />
           ),
         }}
       />
