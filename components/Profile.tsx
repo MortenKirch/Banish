@@ -1,0 +1,110 @@
+import { useNavigation } from "@react-navigation/native";
+import { LogOut, Settings, User } from "lucide-react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
+
+const friends = [
+  { id: "1", name: "Alex", avatar: "https://i.pravatar.cc/150?img=1" },
+  { id: "2", name: "Jordan", avatar: "https://i.pravatar.cc/150?img=2" },
+  { id: "3", name: "Sam", avatar: "https://i.pravatar.cc/150?img=3" },
+  { id: "4", name: "Casey", avatar: "https://i.pravatar.cc/150?img=4" },
+  { id: "5", name: "Morgan", avatar: "https://i.pravatar.cc/150?img=5" },
+];
+
+export default function ProfileScreen() {
+  const navigation = useNavigation();
+
+  const handleLogout = () => {
+    navigation.navigate("Login" as never);
+  };
+
+  return (
+    <ScrollView
+      className="flex-1 bg-zinc-50"
+      contentContainerStyle={{ paddingBottom: 24 }}
+    >
+      <View className="p-6 pt-10">
+        <View className="mb-8 flex-row items-start justify-between">
+          <View className="flex-row items-center gap-4">
+            <View className="h-20 w-20 items-center justify-center rounded-full bg-violet-500 shadow">
+              <User size={40} color="white" />
+            </View>
+
+            <View>
+              <Text className="mb-1 text-2xl font-bold text-zinc-900">
+                BoardGameMaster
+              </Text>
+              <Text className="text-sm text-zinc-500">
+                Collector since 2024
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View className="mb-8 flex-row gap-4">
+          <View className="flex-1 rounded-2xl bg-white p-4 shadow">
+            <Text className="mb-1 text-3xl font-bold text-violet-600">24</Text>
+            <Text className="text-sm text-zinc-500">Games Owned</Text>
+          </View>
+
+          <View className="flex-1 rounded-2xl bg-white p-4 shadow">
+            <Text className="mb-1 text-3xl font-bold text-pink-500">
+              {friends.length}
+            </Text>
+            <Text className="text-sm text-zinc-500">Friends</Text>
+          </View>
+        </View>
+
+        <View className="mb-8">
+          <Text className="mb-4 text-xl font-semibold text-zinc-900">
+            Friends
+          </Text>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 8 }}
+          >
+            <View className="flex-row gap-3">
+              {friends.map((friend) => (
+                <View key={friend.id} className="items-center">
+                  <View className="h-16 w-16 overflow-hidden rounded-full border-2 border-violet-200">
+                    <Image
+                      source={{ uri: friend.avatar }}
+                      className="h-full w-full"
+                      resizeMode="cover"
+                    />
+                  </View>
+                  <Text className="mt-2 text-xs text-zinc-500">
+                    {friend.name}
+                  </Text>
+                </View>
+              ))}
+
+              <Pressable className="items-center">
+                <View className="h-16 w-16 items-center justify-center rounded-full border-2 border-dashed border-zinc-300 bg-zinc-100">
+                  <Text className="text-2xl text-zinc-500">+</Text>
+                </View>
+                <Text className="mt-2 text-xs text-zinc-500">Add</Text>
+              </Pressable>
+            </View>
+          </ScrollView>
+        </View>
+
+        <View className="gap-3">
+          <Pressable className="flex-row items-center gap-3 rounded-xl bg-white px-4 py-4 shadow">
+            <Settings size={20} color="#71717a" />
+            <Text className="text-sm text-zinc-900">Edit Profile</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={handleLogout}
+            className="flex-row items-center gap-3 rounded-xl bg-white px-4 py-4 shadow"
+          >
+            <LogOut size={20} color="#dc2626" />
+            <Text className="text-sm text-red-600">Log Out</Text>
+          </Pressable>
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
