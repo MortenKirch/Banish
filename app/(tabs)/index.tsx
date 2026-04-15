@@ -24,6 +24,9 @@ export default function HomeScreen() {
       <Link href="/signup" className=" underline text-lg">
         Go to signup
       </Link>
+      <Link href="/login" className=" underline text-lg">
+        Go to login
+      </Link>
     </ParallaxScrollView>
   );
 }
