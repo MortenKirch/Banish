@@ -53,6 +53,13 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="games/[game]"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
     </Tabs>
   );
 }
