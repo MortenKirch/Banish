@@ -13,15 +13,20 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   async function signInWithEmail() {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-    if (error) {
-      Alert.alert("Error signing in", error.message);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      if (error) {
+        Alert.alert("Error signing in", error.message);
+      } else {
+        router.replace("/(tabs)");
+      }
+    } catch {
+      Alert.alert("Error signing in", "Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-    } else {
-      router.replace("/(tabs)");
     }
   }
 
