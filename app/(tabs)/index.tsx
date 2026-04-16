@@ -1,16 +1,8 @@
-import { Image } from "expo-image";
-import { StyleSheet } from "react-native";
-
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { Link, Redirect } from "expo-router";
+import { Image } from "expo-image";
+import { Link } from "expo-router";
+import { StyleSheet } from "react-native";
 export default function HomeScreen() {
-  {
-    const user = true; // fake auth
-
-    if (!user) {
-      return <Redirect href="/login" />;
-    }
-  }
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
