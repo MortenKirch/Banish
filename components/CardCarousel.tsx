@@ -19,8 +19,8 @@ type Props = {
 export default function CardCarousel({ category, games }: Props) {
   return (
     <View>
-      <View className="flex flex-row justify-between my-4">
-        <Text className="font-bold text-3xl">{category}</Text>
+      <View className="flex flex-row justify-between py-1">
+        <Text className="font-bold text-2xl">{category}</Text>
         {category == "Your Collection" ? (
           <Link href={"/collection"} className="flex items-center">
             <Text className="text-red-800 font-light text-lg">View all</Text>
@@ -50,6 +50,7 @@ export default function CardCarousel({ category, games }: Props) {
             mfg_playtime={item.mfg_playtime}
             name={item.name}
             genre={item.genre}
+            variant={category === "Recommmended for You" ? "big" : "small"}
           />
         )}
       ></FlatList>
