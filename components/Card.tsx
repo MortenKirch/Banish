@@ -2,12 +2,15 @@ import { View, Pressable, Text, Image } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { Link } from "expo-router";
 
+type CardVariant = "big" | "small";
+
 type Props = {
   bgg_id: string;
   image_path: string;
   mfg_playtime: string;
   name: string;
   genre: string;
+  variant?: CardVariant;
 };
 
 export default function Card({
@@ -16,12 +19,21 @@ export default function Card({
   mfg_playtime,
   name,
   genre,
+  variant = "big"
 }: Props) {
   const imageSource = image_path;
+  const containerClass = 
+    variant === "big" 
+    ? "flex flex-col w-60 h-[240px] rounded-3xl bg-white overflow-hidden shadow-md my-4"
+    : "flex flex-col w-48 h-[180px] rounded-3xl bg-white overflow-hidden shadow-md my-4";
+  const textClass = 
+    variant === "big" 
+    ? "m-3"
+    : "my-[0.2] mx-3";
   return (
     <Link
       href={`/games/${bgg_id}`}
-      className="flex flex-col w-80 h-[300px] rounded-3xl bg-white overflow-hidden"
+      className={containerClass}
     >
       <View style={{ width: "100%", height: "70%" }}>
         <Image
@@ -30,14 +42,14 @@ export default function Card({
             uri: imageSource,
           }}
         />
-        <View className="absolute top-4 right-4 rounded-2xl bg-white flex flex-row px-3 py-1 gap-2 justify-center items-center">
-          <Feather name={"clock"} size={18} color="#949494" />
-          <Text className="color-slate-400">{mfg_playtime} min</Text>
+        <View className="absolute top-2 right-2 rounded-2xl bg-white flex flex-row px-2 py-1 gap-1 justify-center items-center">
+          <Feather name={"clock"} size={12} color="#949494" />
+          <Text className="color-slate-500">{mfg_playtime} min</Text>
         </View>
       </View>
-      <View className="m-4">
-        <Text className="font-semibold text-2xl">{name}</Text>
-        <Text className="color-slate-400">{genre}</Text>
+      <View className={textClass}>
+        <Text className="font-semibold text-xl">{name}</Text>
+        <Text className="color-slate-500">{genre}</Text>
       </View>
     </Link>
   );
