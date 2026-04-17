@@ -11,7 +11,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  async function signInWithEmail() {
+  const signInWithEmail = async () => {
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -24,11 +24,14 @@ export default function Login() {
         router.replace("/(tabs)");
       }
     } catch {
-      Alert.alert("Error signing in", "Something went wrong. Please try again.");
+      Alert.alert(
+        "Error signing in",
+        "Something went wrong. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <View className="m-4 flex align-center justify-center h-full">
