@@ -1,4 +1,5 @@
-import { useNavigation } from "@react-navigation/native";
+import { supabase } from "@/utils/supabase";
+import { useRouter } from "expo-router";
 import { LogOut, Settings, User } from "lucide-react-native";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
@@ -11,10 +12,11 @@ const friends = [
 ];
 
 export default function ProfileScreen() {
-  const navigation = useNavigation();
+  const router = useRouter();
 
   const handleLogout = () => {
-    navigation.navigate("Login" as never);
+    supabase.auth.signOut();
+    router.push("/");
   };
 
   return (
