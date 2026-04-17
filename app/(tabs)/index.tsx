@@ -1,4 +1,5 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
+import SignoutButton from "@/components/SignoutButton";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { StyleSheet } from "react-native";
@@ -19,6 +20,7 @@ export default function HomeScreen() {
       <Link href="/login" className=" underline text-lg">
         Go to login
       </Link>
+      <SignoutButton />
     </ParallaxScrollView>
   );
 }
