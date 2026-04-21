@@ -1,6 +1,6 @@
-import { View, Pressable, Text, Image } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { Link } from "expo-router";
+import { Image, Text, View } from "react-native";
 
 type CardVariant = "big" | "small";
 
@@ -12,29 +12,39 @@ type Props = {
   genre: string;
   variant?: CardVariant;
 };
-
+const variant = {
+  big: {
+    container:
+      "flex flex-col w-60 h-[240px] rounded-3xl bg-white overflow-hidden shadow-md my-4",
+    text: "m-3",
+  },
+  small: {
+    container:
+      "flex flex-col w-48 h-[180px] rounded-3xl bg-white overflow-hidden shadow-md my-4",
+    text: "my-[0.2] mx-3",
+  },
+  xl: {
+    container:
+      "flex flex-col w-72 h-[300px] rounded-3xl bg-white overflow-hidden shadow-md my-4",
+    text: "m-4",
+  },
+};
 export default function Card({
   bgg_id,
   image_path,
   mfg_playtime,
   name,
   genre,
-  variant = "big"
+  variant = "big",
 }: Props) {
   const imageSource = image_path;
-  const containerClass = 
-    variant === "big" 
-    ? "flex flex-col w-60 h-[240px] rounded-3xl bg-white overflow-hidden shadow-md my-4"
-    : "flex flex-col w-48 h-[180px] rounded-3xl bg-white overflow-hidden shadow-md my-4";
-  const textClass = 
-    variant === "big" 
-    ? "m-3"
-    : "my-[0.2] mx-3";
+  const containerClass =
+    variant === "big"
+      ? "flex flex-col w-60 h-[240px] rounded-3xl bg-white overflow-hidden shadow-md my-4"
+      : "flex flex-col w-48 h-[180px] rounded-3xl bg-white overflow-hidden shadow-md my-4";
+  const textClass = variant === "big" ? "m-3" : "my-[0.2] mx-3";
   return (
-    <Link
-      href={`/games/${bgg_id}`}
-      className={containerClass}
-    >
+    <Link href={`/games/${bgg_id}`} className={containerClass}>
       <View style={{ width: "100%", height: "70%" }}>
         <Image
           style={{ height: "100%", width: "100%" }}
