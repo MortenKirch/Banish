@@ -16,31 +16,32 @@ export type Game = {
 
 type UseSearchGamesOptions = {
   query?: string;
-  limit?: number;
 };
 
-export function useSearchGames({
-  query = "",
-  limit = 20,
-}: UseSearchGamesOptions = {}) {
+export function useSearchGames({ query = "" }: UseSearchGamesOptions = {}) {
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const minQueryLength = 2;
 
   const searchGames = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+    const trimmedQuery = query.trim();
 
     let dbQuery = supabase
       .from("games")
       .select(
         "bgg_id, name, image_path, mfg_playtime, game_themes(themes(name)) ",
       )
-      .order("name", { ascending: true })
-      .limit(limit);
+      .order("name", { ascending: true });
 
-    const trimmedQuery = query.trim();
-    if (trimmedQuery) {
+    if (trimmedQuery.length < minQueryLength) {
+      setGames([]);
+      setError("Please enter at least 2 characters to search.");
+      setIsLoading(false);
+      return;
+    } else {
       dbQuery = dbQuery.like("name", `%${trimmedQuery}%`);
     }
 
@@ -68,7 +69,7 @@ export function useSearchGames({
 
     setGames(mappedGames);
     setIsLoading(false);
-  }, [limit, query]);
+  }, [query]);
 
   useEffect(() => {
     searchGames();

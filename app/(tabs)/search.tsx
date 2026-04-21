@@ -7,8 +7,8 @@ import { Pressable, ScrollView, Text } from "react-native";
 
 export default function SearchScreen() {
   const [query, setQuery] = useState("");
-  const { games, isLoading, error } = useSearchGames({ query, limit: 25 });
-  const hasQuery = query.trim().length > 0;
+  const { games, isLoading, error } = useSearchGames({ query });
+  const hasQuery = query.trim().length > 1;
 
   return (
     <ScrollView className="flex-1 bg-[#f4f1ef] px-6 pt-16">
@@ -37,7 +37,7 @@ export default function SearchScreen() {
           {isLoading ? "Loading games..." : `${games.length} games found`}
         </Text>
       ) : null}
-      {error ? <Text className="mb-4 text-red-600">{error}</Text> : null}
+      {error ? <Text className="mb-4 text-red-500">{error}</Text> : null}
       {hasQuery ? (
         games.map((game) => (
           <Card
