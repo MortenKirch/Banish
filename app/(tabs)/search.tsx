@@ -1,14 +1,18 @@
 import Card from "@/components/Card";
 import Input from "@/components/ui/input";
+import useSearchGames from "@/hooks/use-search-games";
 import { SlidersHorizontal } from "lucide-react-native";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text } from "react-native";
+
 export default function SearchScreen() {
   const [query, setQuery] = useState("");
-  const gamesFound = 6; // This is a placeholder. You would replace this with your actual search logic.
+  const { games, isLoading, error } = useSearchGames({ query, limit: 25 });
+  const hasQuery = query.trim().length > 0;
+
   return (
-    <View className="flex-1 bg-[#f4f1ef] px-6 pt-16">
-      <Text className="mb-8 text-center text-5xl font-bold text-[#1f1c1d]">
+    <ScrollView className="flex-1 bg-[#f4f1ef] px-6 pt-16">
+      <Text className="mb-8 text-3xl font-bold text-[#1f1c1d]">
         Search Games
       </Text>
 
@@ -28,17 +32,29 @@ export default function SearchScreen() {
         }
       />
 
-      <Text className="mt-8 text-3xl text-[#6f6964]">
-        {gamesFound} games found
-      </Text>
-      <Card
-        bgg_id="1"
-        image_path="https://cf.geekdo-images.com/original/img/1mXo9n2s8l7e5j3v0kHh6ZtqjM=/0x0/pic3289974.jpg"
-        mfg_playtime="60"
-        name="Catan"
-        genre="Strategy"
-        variant="big"
-      ></Card>
-    </View>
+      {hasQuery ? (
+        <Text className="mt-2 mb-4 text-2xl text-[#6f6964]">
+          {isLoading ? "Loading games..." : `${games.length} games found`}
+        </Text>
+      ) : null}
+      {error ? <Text className="mb-4 text-red-600">{error}</Text> : null}
+      {hasQuery ? (
+        games.map((game) => (
+          <Card
+            key={game.bgg_id}
+            bgg_id={game.bgg_id}
+            image_path={game.image_path}
+            mfg_playtime={game.mfg_playtime}
+            name={game.name}
+            genre={game.genre}
+            variant="big"
+          />
+        ))
+      ) : (
+        <Text className="text-lg text-[#6f6964]">
+          Start typing to search for games...
+        </Text>
+      )}
+    </ScrollView>
   );
 }
