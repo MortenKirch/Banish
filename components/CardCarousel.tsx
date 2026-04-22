@@ -31,7 +31,7 @@ export default function CardCarousel({ category, games }: Props) {
         )}
         {category == "Quick Play" ? (
           <Text className="color-slate-400 flex items-center">
-            Under 30 min
+            Under 45 min
           </Text>
         ) : (
           <></>

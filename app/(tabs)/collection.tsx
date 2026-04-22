@@ -1,5 +1,5 @@
 import { ScrollView, View, Text, Pressable } from "react-native";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import Card from "@/components/Card";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -8,14 +8,13 @@ import { useGamesData } from "@/hooks/use-get-games";
 
 export default function CollectionScreen() {
   const [sortBy, setSortBy] = useState<"name" | "mfg_playtime">("name");
-  const [gameStates, setGamesState] = useState("");
   const { session } = useAuthContext();
 
   const toggleSort = () => {
     setSortBy((prev) => (prev === "name" ? "mfg_playtime" : "name"));
   };
 
-  const { games, isLoading, error, refresh } = useGamesData(
+  const { collection, isLoading, error, refresh } = useGamesData(
     session?.user.id ?? "",
     sortBy,
   );
@@ -31,7 +30,9 @@ export default function CollectionScreen() {
       <View className="grid grid-cols-3 my-4">
         <View className="col-span-2 flex gap-2">
           <Text className="text-4xl font-bold">My Collection</Text>
-          <Text className="color-slate-600 text-lg">{games.length} Games</Text>
+          <Text className="color-slate-600 text-lg">
+            {collection.length} Games
+          </Text>
         </View>
         <Pressable
           className="rounded-2xl bg-slate-200 flex flex-row px-4 py-2 gap-1 justify-center items-center max-w-max max-h-max self-center justify-self-end"
@@ -43,10 +44,13 @@ export default function CollectionScreen() {
           </Text>
         </Pressable>
       </View>
-      {error ? <Text>{error}</Text> : null}
-      {games.length > 0 ? (
+      {isLoading ? (
+        <Text className="color-slate-600 text-2xl">Getting Collection...</Text>
+      ) : null}
+      {error ? <Text className="text-red-600">{error}</Text> : null}
+      {collection.length > 0 ? (
         <View className="grid grid-cols-2">
-          {games.map((game) => (
+          {collection.map((game) => (
             <Card
               key={game.bgg_id}
               bgg_id={game.bgg_id}
