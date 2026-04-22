@@ -141,11 +141,7 @@ export default function GameDetails() {
       {/* Instead of using router.canGoBack in an if statement, just use router.back() */}
       <Pressable
         onPress={() => {
-          if (router.canGoBack()) {
-            router.back();
-            return;
-          }
-          router.replace("/(tabs)");
+          router.back();
         }}
         className="absolute top-6 left-6 p-3 bg-white opacity-90 rounded-full"
       >
