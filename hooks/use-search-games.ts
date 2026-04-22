@@ -42,7 +42,7 @@ export function useSearchGames({ query = "" }: UseSearchGamesOptions = {}) {
       setIsLoading(false);
       return;
     } else {
-      dbQuery = dbQuery.like("name", `%${trimmedQuery}%`);
+      dbQuery = dbQuery.ilike("name", `%${trimmedQuery}%`);
     }
 
     const { data, error: dbError } = await dbQuery;
