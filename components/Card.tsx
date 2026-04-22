@@ -22,8 +22,8 @@ const cardVariants = cva("", {
       wide: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-full h-[240px]",
     },
     text: {
-      sm: "my-[0.2] mx-3",
-      lg: "m-3",
+      sm: "my-[0.2] mx-3 truncate",
+      lg: "m-3 truncate",
     },
   },
 });
