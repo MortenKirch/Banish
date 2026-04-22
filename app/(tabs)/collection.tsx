@@ -1,3 +1,6 @@
+import { ScrollView, View, Text, Pressable } from "react-native";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import Card from "@/components/Card";
 import { useAuthContext } from "@/hooks/use-auth-context";
 import { useGamesData } from "@/hooks/use-get-games";
@@ -8,14 +11,13 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 export default function CollectionScreen() {
   const [sortBy, setSortBy] = useState<"name" | "mfg_playtime">("name");
-  const [gameStates, setGamesState] = useState("");
   const { session } = useAuthContext();
 
   const toggleSort = () => {
     setSortBy((prev) => (prev === "name" ? "mfg_playtime" : "name"));
   };
 
-  const { games, isLoading, error, refresh } = useGamesData(
+  const { collection, isLoading, error, refresh } = useGamesData(
     session?.user.id ?? "",
     sortBy,
   );
@@ -34,7 +36,9 @@ export default function CollectionScreen() {
       <View className=" my-4 ">
         <View className=" flex gap-2">
           <Text className="text-4xl font-bold">My Collection</Text>
-          <Text className="color-slate-600 text-lg">{games.length} Games</Text>
+          <Text className="color-slate-600 text-lg">
+            {collection.length} Games
+          </Text>
         </View>
         <Pressable
           className="rounded-2xl bg-slate-200 flex flex-row px-4 py-2 gap-1 justify-center justify-center max-w-max max-h-max self-center justify-self-end"
@@ -46,6 +50,9 @@ export default function CollectionScreen() {
           </Text>
         </Pressable>
       </View>
+      {isLoading ? (
+        <Text className="color-slate-600 text-2xl">Getting Collection...</Text>
+      ) : null}
       {error ? <Text>{error}</Text> : null}
       {games.length > 0 ? (
         <View className="w-full flex-row flex-wrap">
