@@ -14,18 +14,19 @@ export type Game = {
   }[];
 };
 
-export function useGamesData(userId: string) {
-    const [games, setGames] = useState<Game[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState <string | null>(null);
+export function useGamesData(userId: string, sort: string) {
+  const [games, setGames] = useState<Game[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    const getGames = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
+  const getGames = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
 
     const { data, error: dbError } = await supabase
-        .from("games")
-        .select(`
+      .from("games")
+      .select(
+        `
             bgg_id,
             name,
             image_path,
@@ -40,9 +41,10 @@ export function useGamesData(userId: string) {
                 name
                 )
             )
-        `)
-        .eq("user_collection.user_id", userId)
-        .order("name", {ascending: true});
+        `,
+      )
+      .eq("user_collection.user_id", userId)
+      .order(sort, { ascending: true });
 
     if (dbError) {
       setError(dbError.message);
@@ -65,14 +67,13 @@ export function useGamesData(userId: string) {
     }));
     setGames(mappedGames);
     setIsLoading(false);
-  }, [userId]);
-
+  }, [userId, sort]);
 
   useEffect(() => {
     getGames();
   }, [getGames]);
 
-  return {games, isLoading, error}
+  return { games, isLoading, error, refresh: getGames };
 }
 
 export default useGamesData;
