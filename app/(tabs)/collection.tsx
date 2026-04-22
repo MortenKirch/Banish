@@ -1,5 +1,6 @@
 import { ScrollView, View, Text, Pressable } from "react-native";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import Card from "@/components/Card";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAuthContext } from "@/hooks/use-auth-context";
@@ -7,15 +8,22 @@ import { useGamesData } from "@/hooks/use-get-games";
 
 export default function CollectionScreen() {
   const [sortBy, setSortBy] = useState<"name" | "mfg_playtime">("name");
+  const [gameStates, setGamesState] = useState("");
   const { session } = useAuthContext();
 
   const toggleSort = () => {
     setSortBy((prev) => (prev === "name" ? "mfg_playtime" : "name"));
   };
 
-  const { games, isLoading, error } = useGamesData(
+  const { games, isLoading, error, refresh } = useGamesData(
     session?.user.id ?? "",
     sortBy,
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      refresh();
+    }, [refresh]),
   );
 
   return (

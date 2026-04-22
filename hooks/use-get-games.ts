@@ -73,7 +73,7 @@ export function useGamesData(userId: string, sort: string) {
     getGames();
   }, [getGames]);
 
-  return { games, isLoading, error };
+  return { games, isLoading, error, refresh: getGames };
 }
 
 export default useGamesData;
