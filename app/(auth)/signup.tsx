@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import Input from "@/components/ui/input";
+import { useCreateUser } from "@/hooks/use-create-user";
 import { supabase } from "@/utils/supabase";
 import { Link, useRouter } from "expo-router";
 import { Dices } from "lucide-react-native";
@@ -10,19 +11,44 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
+  const { createUser } = useCreateUser();
   const router = useRouter();
 
   const signUpWithEmail = async () => {
+    const trimmedUsername = username.trim();
+    if (!trimmedUsername) {
+      Alert.alert("Username required", "Please enter a username.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
       });
-      if (error) Alert.alert(error.message);
-      else {
-        router.replace("/(tabs)");
+
+      if (error) {
+        Alert.alert(error.message);
+        return;
       }
+
+      const authUserId = data.user?.id;
+      if (!authUserId) {
+        Alert.alert("Sign up failed", "No user id returned from auth.");
+        return;
+      }
+
+      const created = await createUser(authUserId, trimmedUsername);
+      if (!created) {
+        Alert.alert(
+          "Profile setup failed",
+          "Your account was created, but we could not create your profile.",
+        );
+        return;
+      }
+
+      router.replace("/(tabs)");
     } catch {
       Alert.alert(
         "Error signing up",
