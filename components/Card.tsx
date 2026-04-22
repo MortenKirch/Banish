@@ -1,8 +1,9 @@
 import Feather from "@expo/vector-icons/Feather";
 import { Link } from "expo-router";
 import { Image, Text, View } from "react-native";
+import { cva, type VariantProps } from "class-variance-authority";
 
-type CardVariant = "big" | "small";
+type CardVariantProps = VariantProps<typeof cardVariants>;
 
 type Props = {
   bgg_id: string;
@@ -10,41 +11,35 @@ type Props = {
   mfg_playtime: string;
   name: string;
   genre: string;
-  variant?: CardVariant;
-};
-const variant = {
-  big: {
-    container:
-      "flex flex-col w-60 h-[240px] rounded-3xl bg-white overflow-hidden shadow-md my-4",
-    text: "m-3",
+} & CardVariantProps;
+
+const cardVariants = cva("", {
+  variants: {
+    size: {
+      sm: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-48 h-[180px]",
+      lg: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-60 h-[240px]",
+      tall: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-11/12 h-[240px] justify-self-center",
+      wide: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-full h-[240px]",
+    },
+    text: {
+      sm: "my-[0.2] mx-3",
+      lg: "m-3",
+    },
   },
-  small: {
-    container:
-      "flex flex-col w-48 h-[180px] rounded-3xl bg-white overflow-hidden shadow-md my-4",
-    text: "my-[0.2] mx-3",
-  },
-  xl: {
-    container:
-      "flex flex-col w-72 h-[300px] rounded-3xl bg-white overflow-hidden shadow-md my-4",
-    text: "m-4",
-  },
-};
+});
+
 export default function Card({
   bgg_id,
   image_path,
   mfg_playtime,
   name,
   genre,
-  variant = "big",
+  size = "lg",
+  text = "lg",
 }: Props) {
   const imageSource = image_path;
-  const containerClass =
-    variant === "big"
-      ? "flex flex-col w-60 h-[240px] rounded-3xl bg-white overflow-hidden shadow-md my-4"
-      : "flex flex-col w-48 h-[180px] rounded-3xl bg-white overflow-hidden shadow-md my-4";
-  const textClass = variant === "big" ? "m-3" : "my-[0.2] mx-3";
   return (
-    <Link href={`/games/${bgg_id}`} className={containerClass}>
+    <Link href={`/games/${bgg_id}`} className={cardVariants({ size })}>
       <View style={{ width: "100%", height: "70%" }}>
         <Image
           style={{ height: "100%", width: "100%" }}
@@ -57,7 +52,7 @@ export default function Card({
           <Text className="color-slate-500">{mfg_playtime} min</Text>
         </View>
       </View>
-      <View className={textClass}>
+      <View className={cardVariants({ text })}>
         <Text className="font-semibold text-xl">{name}</Text>
         <Text className="color-slate-500">{genre}</Text>
       </View>
