@@ -1,18 +1,16 @@
+import { useAuthContext } from "@/hooks/use-auth-context";
+import useGetFriends from "@/hooks/use-get-friends";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "expo-router";
 import { LogOut, Settings, User } from "lucide-react-native";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
-const friends = [
-  { id: "1", name: "Alex", avatar: "https://i.pravatar.cc/150?img=1" },
-  { id: "2", name: "Jordan", avatar: "https://i.pravatar.cc/150?img=2" },
-  { id: "3", name: "Sam", avatar: "https://i.pravatar.cc/150?img=3" },
-  { id: "4", name: "Casey", avatar: "https://i.pravatar.cc/150?img=4" },
-  { id: "5", name: "Morgan", avatar: "https://i.pravatar.cc/150?img=5" },
-];
-
 export default function ProfileScreen() {
   const router = useRouter();
+  const { session } = useAuthContext();
+  const userId = session?.user.id ?? null;
+
+  const { friends, isLoading, error } = useGetFriends(userId);
 
   const handleLogout = () => {
     supabase.auth.signOut();
@@ -50,7 +48,7 @@ export default function ProfileScreen() {
 
           <View className="flex-1 rounded-2xl bg-white p-4 shadow">
             <Text className="mb-1 text-3xl font-bold text-pink-500">
-              {friends.length}
+              {isLoading ? "..." : friends.length}
             </Text>
             <Text className="text-sm text-zinc-500">Friends</Text>
           </View>
@@ -60,6 +58,10 @@ export default function ProfileScreen() {
           <Text className="mb-4 text-xl font-semibold text-zinc-900">
             Friends
           </Text>
+
+          {error ? (
+            <Text className="mb-3 text-sm text-red-600">{error}</Text>
+          ) : null}
 
           <ScrollView
             horizontal
@@ -71,13 +73,17 @@ export default function ProfileScreen() {
                 <View key={friend.id} className="items-center">
                   <View className="h-16 w-16 overflow-hidden rounded-full border-2 border-violet-200">
                     <Image
-                      source={{ uri: friend.avatar }}
+                      source={{
+                        uri:
+                          friend.image_url ??
+                          "https://i.pravatar.cc/150?u=" + friend.id,
+                      }}
                       className="h-full w-full"
                       resizeMode="cover"
                     />
                   </View>
                   <Text className="mt-2 text-xs text-zinc-500">
-                    {friend.name}
+                    {friend.username}
                   </Text>
                 </View>
               ))}
