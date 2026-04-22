@@ -1,37 +1,129 @@
+import { useAddCollection } from "@/hooks/use-add-collection";
+import { useAuthContext } from "@/hooks/use-auth-context";
+import { useGameDetails } from "@/hooks/use-game-details";
+import { useIsGameInCollection } from "@/hooks/use-is-game-in-collection";
+import { useRemoveCollection } from "@/hooks/use-remove-collection";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft, Clock, Heart, Swords, Users } from "lucide-react-native";
-import React from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import React, { useMemo } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
-const gamedetails = [
-  {
-    id: "1",
-    title: "Catan",
-    description:
-      "A strategy board game where players collect and trade resources to build settlements and cities.",
-    image:
-      "https://cf.geekdo-images.com/W3Bsga_uLP9kO91gZ7H8yw__original/img/xV7oisd3RQ8R-k18cdWAYthHXsA=/0x0/filters:format(jpeg)/pic2419375.jpg",
-    players: "3-4",
-    playtime: "45",
-    genre: "Strategy",
-    difficulty: 4,
-    rating: 4.5,
-  },
-];
+const getGenre = (
+  game: NonNullable<ReturnType<typeof useGameDetails>["game"]>,
+) => {
+  if (game.cat_strategy) return "Strategy";
+  if (game.cat_family) return "Family";
+  if (game.cat_thematic) return "Thematic";
+  if (game.cat_abstract) return "Abstract";
+  if (game.cat_war) return "War";
+  if (game.cat_party) return "Party";
+  if (game.cat_childrens) return "Children";
+  return "Board Game";
+};
 
-export default function GameDetails({
-  inCollection = false,
-  toggleCollection = () => {},
-}) {
+export default function GameDetails() {
   const router = useRouter();
-  const game = gamedetails[0];
+  const { game: gameParam } = useLocalSearchParams<{ game?: string }>();
+  const { session } = useAuthContext();
+
+  const gameId = useMemo(() => {
+    const raw = Array.isArray(gameParam) ? gameParam[0] : gameParam;
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) ? parsed : null;
+  }, [gameParam]);
+
+  const userId = session?.user.id ?? null;
+
+  const {
+    game,
+    isLoading: isLoadingGame,
+    error: gameError,
+    refetch: refetchGame,
+  } = useGameDetails(gameId);
+
+  const {
+    isInCollection,
+    isLoading: isLoadingCollectionState,
+    error: collectionStateError,
+    refresh: refreshCollectionState,
+  } = useIsGameInCollection(userId, gameId);
+
+  const { addGame, isLoading: isAdding, error: addError } = useAddCollection();
+  const {
+    removeGame,
+    isLoading: isRemoving,
+    error: removeError,
+  } = useRemoveCollection();
+
+  const isMutating = isAdding || isRemoving;
+  const isBusy = isLoadingGame || isLoadingCollectionState || isMutating;
+
+  const toggleCollection = async () => {
+    if (!userId || gameId == null || !game) return;
+
+    const ok = isInCollection
+      ? await removeGame(userId, gameId)
+      : await addGame(userId, gameId);
+
+    if (ok) {
+      await refreshCollectionState();
+    }
+  };
+
+  if (isLoadingGame) {
+    return (
+      <View className="flex-1 items-center justify-center bg-zinc-50">
+        <ActivityIndicator />
+        <Text className="mt-3 text-slate-500">Loading game...</Text>
+      </View>
+    );
+  }
+
+  if (!game || gameId == null) {
+    return (
+      <View className="flex-1 items-center justify-center bg-zinc-50 px-6">
+        <Text className="text-base text-slate-700 text-center">
+          {gameError ?? "Could not load this game."}
+        </Text>
+        <Pressable
+          onPress={refetchGame}
+          className="mt-4 rounded-xl bg-primary px-4 py-2"
+        >
+          <Text className="text-primary-foreground font-semibold">
+            Try again
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  const playersLabel =
+    game.min_players && game.max_players
+      ? `${game.min_players}-${game.max_players}`
+      : game.min_players
+        ? `${game.min_players}+`
+        : "N/A";
+
+  const playtimeLabel = game.mfg_playtime ? `${game.mfg_playtime} mins` : "N/A";
+  const difficultyLabel =
+    game.game_weight != null ? `${game.game_weight.toFixed(1)}/5` : "N/A";
+  const ratingLabel =
+    game.avg_rating != null ? `${game.avg_rating.toFixed(1)}/10` : "N/A";
+
   return (
     <ScrollView className="flex-1 rounded-lg bg-zinc-50">
       <View className="relative">
         <View className="h-[350px] overflow-hidden">
           <Image
-            source={{ uri: game.image }}
+            source={{ uri: game.image_path ?? undefined }}
             className="w-full h-full"
             resizeMode="cover"
           />
@@ -46,14 +138,13 @@ export default function GameDetails({
           />
         </View>
       </View>
-
+      {/* Instead of using router.canGoBack in an if statement, just use router.back() */}
       <Pressable
         onPress={() => {
           if (router.canGoBack()) {
             router.back();
             return;
           }
-
           router.replace("/(tabs)");
         }}
         className="absolute top-6 left-6 p-3 bg-white opacity-90 rounded-full"
@@ -64,67 +155,71 @@ export default function GameDetails({
       <View className="px-6 -mt-40 relative z-10">
         <View className="bg-white rounded-3xl p-6 shadow-xl mb-6">
           <View className="flex-row items-center justify-between mb-2">
-            <Text className="text-3xl font-bold mb-2">{game.title}</Text>
+            <Text className="text-3xl font-bold mb-2">{game.name}</Text>
             <Text className="color-slate-400 text-sm font-bold mb-2">
-              Rating: {game.rating}/5
+              Rating: {ratingLabel}
             </Text>
           </View>
-          <Text className="text-primary mb-6">{game.genre}</Text>
+
+          <Text className="text-primary mb-6">{getGenre(game)}</Text>
 
           <View className="flex-row gap-2 mb-6">
             <View className="flex-1 items-center justify-center gap-2">
-              <View>
-                <Clock size={20} color="#6b7280" />
-              </View>
-              <Text className="text-sm text-foreground">
-                {game.playtime} mins
-              </Text>
+              <Clock size={20} color="#6b7280" />
+              <Text className="text-sm text-foreground">{playtimeLabel}</Text>
             </View>
 
             <View className="flex-1 items-center justify-center gap-2">
-              <View>
-                <Users size={20} color="#6b7280" />
-              </View>
-              <Text className="text-sm text-foreground">{game.players}</Text>
+              <Users size={20} color="#6b7280" />
+              <Text className="text-sm text-foreground">{playersLabel}</Text>
             </View>
 
             <View className="flex-1 items-center justify-center gap-2">
-              <View>
-                <Swords size={20} color="#6b7280" />
-              </View>
-              <Text className="text-sm text-foreground">
-                {game.difficulty}/5
-              </Text>
+              <Swords size={20} color="#6b7280" />
+              <Text className="text-sm text-foreground">{difficultyLabel}</Text>
             </View>
           </View>
 
           <View className="mb-4">
             <Text className="text-sm font-semibold mb-2">Description</Text>
             <Text className="text-sm text-muted-foreground leading-6">
-              {game.description}
+              {game.description ?? "No description available."}
             </Text>
           </View>
+
+          {(collectionStateError || addError || removeError) && (
+            <Text className="mb-3 text-sm text-red-600">
+              {collectionStateError || addError || removeError}
+            </Text>
+          )}
+
           <View className="flex-row gap-2 justify-center">
             <Pressable
               onPress={toggleCollection}
-              className={`w-3/4 items-center justify-center rounded-xl ${
-                inCollection ? "bg-muted" : "bg-primary"
-              }`}
+              disabled={isBusy || !userId}
+              className={`w-3/4 items-center justify-center rounded-xl py-3 border ${
+                isInCollection
+                  ? "bg-muted border-black"
+                  : "bg-primary border-primary"
+              } ${isBusy || !userId ? "opacity-60" : ""}`}
             >
               {({ pressed }) => (
                 <Text
                   className={`text-center font-semibold ${
-                    inCollection
+                    isInCollection
                       ? "text-muted-foreground"
                       : "text-primary-foreground"
                   } ${pressed ? "opacity-70" : ""}`}
                 >
-                  {inCollection
-                    ? "Remove from Collection"
-                    : "Add to Collection"}
+                  {!userId
+                    ? "Sign in to add games"
+                    : isInCollection
+                      ? "Remove from Collection"
+                      : "Add to Collection"}
                 </Text>
               )}
             </Pressable>
+
             <Pressable className="p-2 border-primary border-2 rounded-xl">
               <Heart size={25} color="#6b7280" />
             </Pressable>

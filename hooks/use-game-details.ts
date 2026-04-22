@@ -26,7 +26,7 @@ export const useGameDetails = (gameId: number | null) => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchGameDetails = useCallback(async () => {
-    if (gameId || Number.isNaN(gameId)) {
+    if (gameId == null || Number.isNaN(gameId)) {
       setGame(null);
       setError("Invalid game ID");
       setIsLoading(false);

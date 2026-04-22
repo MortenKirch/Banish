@@ -25,7 +25,7 @@ export const useIsGameInCollection = (
         .select("user_id,game_id")
         .eq("user_id", userId)
         .eq("game_id", gameId)
-        .single();
+        .maybeSingle();
 
       if (dbError) {
         setIsInCollection(false);
