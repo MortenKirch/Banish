@@ -9,7 +9,7 @@ export default function CollectionScreen() {
   const { games, isLoading, error } = useGamesData(session?.user.id ?? "");
 
   return (
-    <ScrollView className="bg-white items-center">
+    <ScrollView className="bg-white items-center px-2">
       <View className="grid grid-cols-3 my-4">
         <View className="col-span-2 flex gap-2">
           <Text className="text-4xl font-bold">My Collection</Text>
@@ -30,7 +30,8 @@ export default function CollectionScreen() {
             mfg_playtime={game.mfg_playtime}
             name={game.name}
             genre={game.genre}
-            variant="small"
+            size="tall"
+            text="lg"
           />
         ))}
       </View>

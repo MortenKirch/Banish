@@ -50,7 +50,8 @@ export default function CardCarousel({ category, games }: Props) {
             mfg_playtime={item.mfg_playtime}
             name={item.name}
             genre={item.genre}
-            variant={category === "Recommmended for You" ? "big" : "small"}
+            size={category === "Recommmended for You" ? "lg" : "sm"}
+            text={category === "Recommmended for You" ? "lg" : "sm"}
           />
         )}
       ></FlatList>

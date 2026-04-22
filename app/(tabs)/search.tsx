@@ -47,7 +47,8 @@ export default function SearchScreen() {
             mfg_playtime={game.mfg_playtime}
             name={game.name}
             genre={game.genre}
-            variant="big"
+            size="wide"
+            text="lg"
           />
         ))
       ) : (
