@@ -1,6 +1,3 @@
-import { ScrollView, View, Text, Pressable } from "react-native";
-import { useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import Card from "@/components/Card";
 import { useAuthContext } from "@/hooks/use-auth-context";
 import { useGamesData } from "@/hooks/use-get-games";
@@ -54,9 +51,9 @@ export default function CollectionScreen() {
         <Text className="color-slate-600 text-2xl">Getting Collection...</Text>
       ) : null}
       {error ? <Text>{error}</Text> : null}
-      {games.length > 0 ? (
+      {collection.length > 0 ? (
         <View className="w-full flex-row flex-wrap">
-          {games.map((game) => (
+          {collection.map((game) => (
             <View key={game.bgg_id} className="w-1/2 p-2">
               <Card
                 bgg_id={game.bgg_id}

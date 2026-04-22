@@ -70,7 +70,11 @@ export default function ProfileScreen() {
           >
             <View className="flex-row gap-3">
               {friends.map((friend) => (
-                <View key={friend.id} className="items-center">
+                <Pressable
+                  key={friend.id}
+                  onPress={() => router.push(`/(tabs)/user/${friend.id}`)}
+                  className="items-center"
+                >
                   <View className="h-16 w-16 overflow-hidden rounded-full border-2 border-violet-200">
                     <Image
                       source={{
@@ -85,7 +89,7 @@ export default function ProfileScreen() {
                   <Text className="mt-2 text-xs text-zinc-500">
                     {friend.username}
                   </Text>
-                </View>
+                </Pressable>
               ))}
 
               <Pressable className="items-center">
