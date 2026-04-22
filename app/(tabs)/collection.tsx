@@ -1,10 +1,10 @@
-import { ScrollView, View, Text, Pressable } from "react-native";
-import { useState, useCallback, useEffect } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import Card from "@/components/Card";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAuthContext } from "@/hooks/use-auth-context";
 import { useGamesData } from "@/hooks/use-get-games";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
 export default function CollectionScreen() {
   const [sortBy, setSortBy] = useState<"name" | "mfg_playtime">("name");
@@ -27,14 +27,17 @@ export default function CollectionScreen() {
   );
 
   return (
-    <ScrollView className="bg-white items-center px-2">
-      <View className="grid grid-cols-3 my-4">
-        <View className="col-span-2 flex gap-2">
+    <ScrollView
+      className="mt-16 px-2 "
+      contentContainerStyle={{ alignItems: "center" }}
+    >
+      <View className=" my-4 ">
+        <View className=" flex gap-2">
           <Text className="text-4xl font-bold">My Collection</Text>
           <Text className="color-slate-600 text-lg">{games.length} Games</Text>
         </View>
         <Pressable
-          className="rounded-2xl bg-slate-200 flex flex-row px-4 py-2 gap-1 justify-center items-center max-w-max max-h-max self-center justify-self-end"
+          className="rounded-2xl bg-slate-200 flex flex-row px-4 py-2 gap-1 justify-center justify-center max-w-max max-h-max self-center justify-self-end"
           onPress={toggleSort}
         >
           <MaterialCommunityIcons name="arrow-up-down" size={14} color="grey" />
@@ -45,18 +48,19 @@ export default function CollectionScreen() {
       </View>
       {error ? <Text>{error}</Text> : null}
       {games.length > 0 ? (
-        <View className="grid grid-cols-2">
+        <View className="w-full flex-row flex-wrap">
           {games.map((game) => (
-            <Card
-              key={game.bgg_id}
-              bgg_id={game.bgg_id}
-              image_path={game.image_path}
-              mfg_playtime={game.mfg_playtime}
-              name={game.name}
-              genre={game.genre}
-              size="tall"
-              text="lg"
-            />
+            <View key={game.bgg_id} className="w-1/2 p-2">
+              <Card
+                bgg_id={game.bgg_id}
+                image_path={game.image_path}
+                mfg_playtime={game.mfg_playtime}
+                name={game.name}
+                genre={game.genre}
+                size="tall"
+                text="lg"
+              />
+            </View>
           ))}
         </View>
       ) : (

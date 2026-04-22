@@ -1,7 +1,7 @@
 import Feather from "@expo/vector-icons/Feather";
+import { cva, type VariantProps } from "class-variance-authority";
 import { Link } from "expo-router";
 import { Image, Text, View } from "react-native";
-import { cva, type VariantProps } from "class-variance-authority";
 
 type CardVariantProps = VariantProps<typeof cardVariants>;
 
