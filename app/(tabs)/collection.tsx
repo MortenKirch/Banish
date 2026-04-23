@@ -2,6 +2,9 @@ import Card from "@/components/Card";
 import { useAuthContext } from "@/hooks/use-auth-context";
 import { useGamesData } from "@/hooks/use-get-games";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
 export default function CollectionScreen() {
   const [sortBy, setSortBy] = useState<"name" | "mfg_playtime">("name");
