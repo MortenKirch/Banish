@@ -18,7 +18,7 @@ const cardVariants = cva("", {
     size: {
       sm: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-48 h-[180px]",
       lg: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-60 h-[240px]",
-      tall: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-11/12 h-[240px] justify-self-center",
+      tall: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-full h-[240px] justify-self-center",
       wide: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-full h-[240px]",
     },
     text: {
