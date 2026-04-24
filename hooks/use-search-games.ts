@@ -38,7 +38,8 @@ export function useSearchGames({ query = "" }: UseSearchGamesOptions = {}) {
 
     if (trimmedQuery.length < minQueryLength) {
       setGames([]);
-      setError("Please enter at least 2 characters to search.");
+      /* setError("Please enter at least 2 characters to search."); */
+      setError(null);
       setIsLoading(false);
       return;
     } else {

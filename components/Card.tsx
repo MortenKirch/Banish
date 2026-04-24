@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { useRouter } from "expo-router";
 import { Image, Pressable, Text, View } from "react-native";
 import * as Haptics from "expo-haptics";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { usePopup } from "@/hooks/use-popup";
 
 type CardVariantProps = VariantProps<typeof cardVariants>;
@@ -44,9 +44,20 @@ export default function Card({
   const router = useRouter();
   const longPressTriggered = useRef(false);
   const { openPopup } = usePopup();
+  const [isLongPressActive, setIsLongPressActive] = useState(false);
   return (
     <Pressable
       className={cardVariants({ size })}
+      style={{
+        transform: [{ scale: isLongPressActive ? 0.95 : 1 }],
+        opacity: isLongPressActive ? 0.88 : 1,
+      }}
+      onPressIn={() => {
+        setIsLongPressActive(true);
+      }}
+      onPressOut={() => {
+        setIsLongPressActive(false);
+      }}
       onPress={() => {
         if (longPressTriggered.current) {
           longPressTriggered.current = false;
@@ -56,6 +67,7 @@ export default function Card({
       }}
       onLongPress={async () => {
         longPressTriggered.current = true;
+
         await Haptics.performAndroidHapticsAsync(
           Haptics.AndroidHaptics.Long_Press,
         );
@@ -65,7 +77,7 @@ export default function Card({
           openPopup(numericId);
         }
       }}
-      delayLongPress={350}
+      delayLongPress={300}
     >
       <View style={{ width: "100%", height: "70%" }}>
         <Image

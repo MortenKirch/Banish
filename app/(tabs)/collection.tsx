@@ -37,10 +37,10 @@ export default function CollectionScreen() {
   if (isLoading) {
     return (
       <ScrollView
-        className="mt-16 px-2 bg-white"
+        className="mt-16 px-4 bg-[#f4f1ef]"
         contentContainerStyle={{ alignItems: "center" }}
       >
-        <View className=" my-4 flex flex-row w-full justify-between bg-white">
+        <View className=" my-4 flex flex-row w-full justify-between">
           <View className=" flex gap-2">
             <Text className="text-4xl font-bold">My Collection</Text>
             <Text className="color-slate-600 text-lg">
@@ -62,7 +62,7 @@ export default function CollectionScreen() {
             </Text>
           </Pressable>
         </View>
-        <View className="flex-1 items-center justify-center bg-zinc-50">
+        <View className="flex-1 items-center justify-center">
           <Text className="color-slate-600 text-2xl">
             Getting Collection...
           </Text>
@@ -73,7 +73,7 @@ export default function CollectionScreen() {
 
   return (
     <ScrollView
-      className="mt-16 px-2 bg-[#f4f1ef]"
+      className="mt-16 px-4 bg-[#f4f1ef]"
       contentContainerStyle={{ alignItems: "center" }}
     >
       <View className=" my-4 flex flex-row w-full justify-between">

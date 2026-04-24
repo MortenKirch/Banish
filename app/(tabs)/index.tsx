@@ -4,6 +4,7 @@ import { useAuthContext } from "@/hooks/use-auth-context";
 import { useEffect } from "react";
 import { usePopup } from "@/hooks/use-popup";
 import { useGamesData } from "@/hooks/use-get-games";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 export default function HomeScreen() {
   const { session } = useAuthContext();
@@ -18,6 +19,8 @@ export default function HomeScreen() {
 
   const { collectionDirty, clearCollectionDirty } = usePopup();
 
+  const tabBarHeight = useBottomTabBarHeight();
+
   useEffect(() => {
     if (!collectionDirty) return;
     refreshAll();
@@ -25,7 +28,10 @@ export default function HomeScreen() {
   }, [collectionDirty, refreshAll, clearCollectionDirty]);
 
   return (
-    <ScrollView className="bg-[#f4f1ef] px-4 pt-16">
+    <ScrollView
+      className="bg-[#f4f1ef] px-4 pt-16"
+      contentContainerStyle={{ paddingBottom: tabBarHeight - 20 }}
+    >
       <View className="my-4">
         <Text className="text-4xl font-bold ">Welcome back</Text>
         <Text className="my-2 color-slate-600 text-xl">Ready to play?</Text>
