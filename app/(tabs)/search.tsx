@@ -102,7 +102,7 @@ export default function SearchScreen() {
       {error ? <Text className="mb-4 text-red-500">{error}</Text> : null}
 
       {!hasQuery ? (
-        <Text className="text-lg text-[#6f6964]">
+        <Text className="text-lg text-[#6f6964] mt-4">
           Start typing to search for {activeTab}...
         </Text>
       ) : activeTab === "games" ? (

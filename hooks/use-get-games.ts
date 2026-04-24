@@ -199,12 +199,19 @@ export function useGamesData(userId: string, sort: string) {
     getQuickPlay();
   }, [getCollection, getRecommended, getQuickPlay]);
 
+  const refreshAll = useCallback(() => {
+    getCollection();
+    getRecommended();
+    getQuickPlay();
+  }, [getCollection, getRecommended, getQuickPlay]);
+
   return {
     collection,
     recommendedGames,
     quickPlay,
     isLoading,
     error,
+    refreshAll,
     refresh: getCollection,
   };
 }

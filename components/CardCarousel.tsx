@@ -23,8 +23,15 @@ export default function CardCarousel({ category, games }: Props) {
         <Text className="font-bold text-2xl">{category}</Text>
         {category == "Your Collection" ? (
           <Link href={"/collection"} className="flex items-center">
-            <Text className="text-red-800 font-light text-lg">View all</Text>
-            <Entypo name="chevron-small-right" size={24} color="red" />
+            <View className="flex-row items-center">
+              <Text className="text-red-800 font-light text-lg">View all</Text>
+              <Entypo
+                name="chevron-small-right"
+                size={24}
+                color="#991b1b"
+                style={{ marginTop: 1 }}
+              />
+            </View>
           </Link>
         ) : (
           <></>
