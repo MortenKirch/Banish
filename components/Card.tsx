@@ -1,7 +1,10 @@
 import Feather from "@expo/vector-icons/Feather";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Link } from "expo-router";
-import { Image, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Image, Pressable, Text, View } from "react-native";
+import * as Haptics from "expo-haptics";
+import { useRef } from "react";
+import { usePopup } from "@/hooks/use-popup";
 
 type CardVariantProps = VariantProps<typeof cardVariants>;
 
@@ -22,8 +25,8 @@ const cardVariants = cva("", {
       wide: "flex flex-col rounded-3xl bg-white overflow-hidden shadow-md my-4 w-full h-[240px]",
     },
     text: {
-      sm: "my-[0.2] mx-3 truncate",
-      lg: "m-3 truncate",
+      sm: "my-[0.2] mx-3",
+      lg: "m-3",
     },
   },
 });
@@ -38,8 +41,32 @@ export default function Card({
   text = "lg",
 }: Props) {
   const imageSource = image_path;
+  const router = useRouter();
+  const longPressTriggered = useRef(false);
+  const { openPopup } = usePopup();
   return (
-    <Link href={`/games/${bgg_id}`} className={cardVariants({ size })}>
+    <Pressable
+      className={cardVariants({ size })}
+      onPress={() => {
+        if (longPressTriggered.current) {
+          longPressTriggered.current = false;
+          return;
+        }
+        router.push(`/games/${bgg_id}`);
+      }}
+      onLongPress={async () => {
+        longPressTriggered.current = true;
+        await Haptics.performAndroidHapticsAsync(
+          Haptics.AndroidHaptics.Long_Press,
+        );
+
+        const numericId = Number(bgg_id);
+        if (Number.isFinite(numericId)) {
+          openPopup(numericId);
+        }
+      }}
+      delayLongPress={350}
+    >
       <View style={{ width: "100%", height: "70%" }}>
         <Image
           style={{ height: "100%", width: "100%" }}
@@ -53,9 +80,21 @@ export default function Card({
         </View>
       </View>
       <View className={cardVariants({ text })}>
-        <Text className="font-semibold text-xl">{name}</Text>
-        <Text className="color-slate-500">{genre}</Text>
+        <Text
+          className="font-semibold text-xl"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {name}
+        </Text>
+        <Text
+          className="color-slate-500"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {genre}
+        </Text>
       </View>
-    </Link>
+    </Pressable>
   );
 }

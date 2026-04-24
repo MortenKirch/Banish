@@ -12,6 +12,7 @@ import { useAuthContext } from "@/hooks/use-auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import AuthProvider from "@/providers/auth-provider";
 import { ActivityIndicator, View } from "react-native";
+import PopupProvider from "@/providers/popup-provider";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -48,7 +49,9 @@ function RootNavigator() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootNavigator />
+      <PopupProvider>
+        <RootNavigator />
+      </PopupProvider>
     </AuthProvider>
   );
 }
